@@ -1,0 +1,317 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+////////////////////////////////////////////////
+/// USER (AUTH / ROLE)
+////////////////////////////////////////////////
+model Users {
+  id            Int     @id @default(autoincrement())
+  nama          String
+  email         String? @unique
+  password      String?
+  image_profile String?
+  role          Role
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  admin Admin?
+  siswa Siswa?
+  guru  Guru?
+
+  transaksi Transaksi[]
+  booking   Booking[]
+
+  aduanSent Aduan[] @relation("AdminPengirim")
+  aduanRecv Aduan[] @relation("WalasPenerima")
+}
+
+////////////////////////////////////////////////
+/// ADMIN
+////////////////////////////////////////////////
+model Admin {
+  id Int @id @default(autoincrement())
+  nip String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId Int @unique
+  user   Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+////////////////////////////////////////////////
+/// GURU (PROFESI)
+////////////////////////////////////////////////
+model Guru {
+  id  Int @id @default(autoincrement())
+  nip String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId Int @unique
+  user   Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  walas Walas?
+}
+
+////////////////////////////////////////////////
+/// SISWA
+////////////////////////////////////////////////
+model Siswa {
+  id   Int    @id @default(autoincrement())
+  nisn String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId Int @unique
+  user   Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  classId Int?
+  class   Classes? @relation(fields: [classId], references: [id])
+}
+
+////////////////////////////////////////////////
+/// WALAS (JABATAN)
+////////////////////////////////////////////////
+model Walas {
+  id Int @id @default(autoincrement())
+
+  guruId Int @unique
+  guru   Guru @relation(fields: [guruId], references: [id], onDelete: Cascade)
+
+  kelas Classes[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+////////////////////////////////////////////////
+/// AKADEMIK (KELAS)
+////////////////////////////////////////////////
+model Classes {
+  id        Int    @id @default(autoincrement())
+  tingkat  Tingkat
+  namaKelas NamaKelas
+  @@unique([tingkat, namaKelas]) 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  walasId Int?
+  walas   Walas? @relation(fields: [walasId], references: [id], onDelete: SetNull)
+
+  siswa Siswa[]
+}
+
+////////////////////////////////////////////////
+/// PERPUSTAKAAN - MASTER
+////////////////////////////////////////////////
+model JenisBuku {
+  id   Int    @id @default(autoincrement())
+  nama String
+  icon String?
+  deskripsi String?
+  color String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  buku Buku[]
+}
+
+model Buku {
+  id         Int    @id @default(autoincrement())
+  judul      String
+  pengarang  String
+  penerbit   String
+  tahun      Int
+  stok       Int
+  image_buku String
+  deskripsi String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  jenisBukuId Int
+  jenisBuku   JenisBuku @relation(fields: [jenisBukuId], references: [id])
+
+  detailTrans DetailTransaksi[]
+  booking     Booking[]
+}
+
+////////////////////////////////////////////////
+/// PERPUSTAKAAN - TRANSAKSI
+////////////////////////////////////////////////
+model Transaksi {
+  id Int @id @default(autoincrement())
+
+  userId Int
+  user   Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  tipe       TransaksiTipe
+  keterangan String?
+
+  tanggalPinjam  DateTime
+  tanggalKembali DateTime?
+  status         Status
+
+  perpanjanganKe Int @default(0)
+  maxPerpanjang  Int @default(1)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  detailTrans  DetailTransaksi[]
+  perpanjangan Perpanjangan[]
+  booking      Booking?
+
+  denda Denda?
+}
+
+////////////////////////////////////////////////
+/// LOG PERPANJANGAN
+////////////////////////////////////////////////
+model Perpanjangan {
+  id Int @id @default(autoincrement())
+
+  transaksiId Int
+  transaksi   Transaksi @relation(fields: [transaksiId], references: [id], onDelete: Cascade)
+
+  tanggalSebelum DateTime
+  tanggalSesudah DateTime
+
+  createdAt DateTime @default(now())
+}
+
+model DetailTransaksi {
+  id Int @id @default(autoincrement())
+
+  transaksiId Int
+  transaksi   Transaksi @relation(fields: [transaksiId], references: [id])
+
+  bukuId Int
+  buku   Buku @relation(fields: [bukuId], references: [id])
+
+  jumlah      Int    @default(1)
+  kondisiBuku String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+////////////////////////////////////////////////
+/// BOOKING
+////////////////////////////////////////////////
+model Booking {
+  id Int @id @default(autoincrement())
+
+  transaksiId Int @unique
+  transaksi   Transaksi @relation(fields: [transaksiId], references: [id], onDelete: Cascade)
+
+  userId Int?
+  user   Users? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  bukuId Int
+  buku   Buku @relation(fields: [bukuId], references: [id])
+
+  tanggalBooking DateTime @default(now())
+  status         BookingStatus
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+////////////////////////////////////////////////
+/// ADUAN
+////////////////////////////////////////////////
+model Aduan {
+  id Int @id @default(autoincrement())
+
+  adminId Int?
+  admin   Users? @relation("AdminPengirim", fields: [adminId], references: [id], onDelete: SetNull)
+
+  walasId Int?
+  walas   Users? @relation("WalasPenerima", fields: [walasId], references: [id], onDelete: SetNull)
+
+  isi    String
+  status AduanStatus
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+////////////////////////////////////////////////
+/// DENDA
+////////////////////////////////////////////////
+model Denda {
+  id Int @id @default(autoincrement())
+
+  transaksiId Int @unique
+  transaksi   Transaksi @relation(fields: [transaksiId], references: [id], onDelete: Cascade)
+
+  nilaiDenda Int
+  alasan     String?
+
+  createdAt DateTime @default(now())
+}
+
+////////////////////////////////////////////////
+/// ENUMS
+////////////////////////////////////////////////
+enum Role {
+  ADMIN
+  GURU
+  SISWA
+}
+
+enum TransaksiTipe {
+  SISWA
+  GURU
+}
+
+enum Status {
+  BOOKED
+  PINJAM
+  TERLAMBAT
+  SELESAI
+}
+
+enum BookingStatus {
+  MENUNGGU
+  SIAP_AMBIL
+  BATAL
+}
+
+enum AduanStatus {
+  BARU
+  DITANGGAPI
+  SELESAI
+}
+
+enum Tingkat {
+  X
+  XI
+  XII
+}
+
+enum NamaKelas {
+  A
+  B
+  C
+}
+
+////////////////////////////////////////////////
+/// ERD
+////////////////////////////////////////////////
+generator erd {
+  provider = "prisma-erd-generator"
+}

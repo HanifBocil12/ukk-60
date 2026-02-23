@@ -9,14 +9,31 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@iconify/json": "^2.2.437",
+    "@iconify/react": "^6.0.2",
+    "@iconify/utils": "^3.1.0",
+    "@prisma/client": "^6.19.2",
+    "bcrypt": "^6.0.0",
+    "framer-motion": "^12.29.2",
+    "jsonwebtoken": "^9.0.3",
+    "lucide-react": "^0.575.0",
     "next": "16.1.5",
+    "prisma": "^6.19.2",
     "react": "19.2.3",
+    "react-colorful": "^5.6.1",
     "react-dom": "19.2.3"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "autoprefix": "^1.0.1",
+    "autoprefixer": "^10.4.24",
     "eslint": "^9",
     "eslint-config-next": "16.1.5",
-    "tailwindcss": "^4"
+    "postcss": "^8.5.6",
+    "prisma-erd-generator": "^2.4.2",
+    "tailwindcss": "^4.1.18"
   }
 }

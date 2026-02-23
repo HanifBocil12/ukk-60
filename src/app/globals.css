@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@tailwind utilities;
 
 :root {
   --background: #ffffff;
@@ -12,10 +13,74 @@
   --font-mono: var(--font-geist-mono);
 }
 
+@layer components{
+  .text-nav{
+    @apply text-sm md:text-base lg:text-lg text-wrap font-normal
+  }
+
+  .text-title{
+    @apply text-xl md:text-2xl lg:text-4xl text-wrap
+  }
+
+  .text-subtitle{
+    @apply text-lg md:text-xl lg:text-2xl text-wrap font-medium
+  }
+
+  .text-title-desc{
+    @apply text-xs md:text-sm font-bold
+  }
+
+  .text-normal-desc{
+    @apply text-xs md:text-sm font-normal
+  }
+
+  .card{
+   @apply w-full
+         bg-white
+         rounded-card
+         shadow-sm
+         flex flex-col
+         gap-2 md:gap-3
+         p-4 md:p-5;
+  }
+  .card-f{
+   @apply w-full
+         bg-white
+         rounded-card-big
+         shadow-sm md:shadow-lg
+         flex flex-col
+         gap-2 md:gap-3
+         p-6 md:p-10;
+  }
+}
+
+@theme {
+  --color-birutua: #0C2C55;
+  --color-whitebg: #F9FCFF;
+  --color-birumuda : #135BEC;
+  --color-redme : #FF0000;
+  --color-whitecard: #FBFEFF;
+  --radius-card :4px;
+  --radius-card-big: 8px;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background : #FBFEFF;
     --foreground: #ededed;
+  }
+}
+
+@media (width >= 48rem){
+  @theme {
+    --radius-card: 6px;
+    --radius-card-big: 12px;
+  }
+}
+@media (width >= 64rem){
+  @theme {
+    --radius-card: 8px;
+    --radius-card-big: 16px;
   }
 }
 

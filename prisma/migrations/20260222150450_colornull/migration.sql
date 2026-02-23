@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "JenisBuku" ALTER COLUMN "deskripsi" DROP NOT NULL,
+ALTER COLUMN "icon" DROP NOT NULL,
+ALTER COLUMN "color" DROP NOT NULL;

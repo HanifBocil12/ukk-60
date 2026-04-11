@@ -19,5 +19,30 @@ export const UsersModel = {
 
  findByEmail: async (email) => {
     return prisma.users.findUnique({ where: { email } });
-  }
+  },
+
+  findAllGuru: () => {
+    return prisma.users.findMany({
+        where: { role: "GURU" },
+        include: {
+            guru: {
+                include: {
+                    walas: {
+                        include: { kelas: true }
+                    }
+                }
+            }
+        }
+    });},
+  findAllSiswa: () => {
+    return prisma.users.findMany({
+        where: { role: "SISWA" },
+        include: {
+            siswa: {
+                include:{
+                    class: true
+                }
+            }
+        }
+    });}
 }

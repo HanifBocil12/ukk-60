@@ -36,13 +36,13 @@ model Users {
 /// ADMIN
 ////////////////////////////////////////////////
 model Admin {
-  id Int @id @default(autoincrement())
+  id  Int    @id @default(autoincrement())
   nip String @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  userId Int @unique
+  userId Int   @unique
   user   Users @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -50,13 +50,13 @@ model Admin {
 /// GURU (PROFESI)
 ////////////////////////////////////////////////
 model Guru {
-  id  Int @id @default(autoincrement())
+  id  Int    @id @default(autoincrement())
   nip String @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  userId Int @unique
+  userId Int   @unique
   user   Users @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   walas Walas?
@@ -72,7 +72,7 @@ model Siswa {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  userId Int @unique
+  userId Int   @unique
   user   Users @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   classId Int?
@@ -85,7 +85,7 @@ model Siswa {
 model Walas {
   id Int @id @default(autoincrement())
 
-  guruId Int @unique
+  guruId Int  @unique
   guru   Guru @relation(fields: [guruId], references: [id], onDelete: Cascade)
 
   kelas Classes[]
@@ -98,10 +98,9 @@ model Walas {
 /// AKADEMIK (KELAS)
 ////////////////////////////////////////////////
 model Classes {
-  id        Int    @id @default(autoincrement())
-  tingkat  Tingkat
+  id        Int       @id @default(autoincrement())
+  tingkat   Tingkat
   namaKelas NamaKelas
-  @@unique([tingkat, namaKelas]) 
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -110,17 +109,19 @@ model Classes {
   walas   Walas? @relation(fields: [walasId], references: [id], onDelete: SetNull)
 
   siswa Siswa[]
+
+  @@unique([tingkat, namaKelas])
 }
 
 ////////////////////////////////////////////////
 /// PERPUSTAKAAN - MASTER
 ////////////////////////////////////////////////
 model JenisBuku {
-  id   Int    @id @default(autoincrement())
-  nama String
-  icon String?
+  id        Int     @id @default(autoincrement())
+  nama      String
+  icon      String?
   deskripsi String?
-  color String?
+  color     String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -136,7 +137,7 @@ model Buku {
   tahun      Int
   stok       Int
   image_buku String
-  deskripsi String
+  deskripsi  String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -164,32 +165,12 @@ model Transaksi {
   tanggalKembali DateTime?
   status         Status
 
-  perpanjanganKe Int @default(0)
-  maxPerpanjang  Int @default(1)
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  detailTrans  DetailTransaksi[]
-  perpanjangan Perpanjangan[]
-  booking      Booking?
-
-  denda Denda?
-}
-
-////////////////////////////////////////////////
-/// LOG PERPANJANGAN
-////////////////////////////////////////////////
-model Perpanjangan {
-  id Int @id @default(autoincrement())
-
-  transaksiId Int
-  transaksi   Transaksi @relation(fields: [transaksiId], references: [id], onDelete: Cascade)
-
-  tanggalSebelum DateTime
-  tanggalSesudah DateTime
-
-  createdAt DateTime @default(now())
+  detailTrans DetailTransaksi[]
+  booking     Booking?
+  denda       Denda?
 }
 
 model DetailTransaksi {
@@ -214,8 +195,9 @@ model DetailTransaksi {
 model Booking {
   id Int @id @default(autoincrement())
 
-  transaksiId Int @unique
+  transaksiId Int       @unique
   transaksi   Transaksi @relation(fields: [transaksiId], references: [id], onDelete: Cascade)
+  durasi      Int       @default(7)
 
   userId Int?
   user   Users? @relation(fields: [userId], references: [id], onDelete: SetNull)
@@ -223,7 +205,7 @@ model Booking {
   bukuId Int
   buku   Buku @relation(fields: [bukuId], references: [id])
 
-  tanggalBooking DateTime @default(now())
+  tanggalBooking DateTime      @default(now())
   status         BookingStatus
 
   createdAt DateTime @default(now())
@@ -255,7 +237,7 @@ model Aduan {
 model Denda {
   id Int @id @default(autoincrement())
 
-  transaksiId Int @unique
+  transaksiId Int       @unique
   transaksi   Transaksi @relation(fields: [transaksiId], references: [id], onDelete: Cascade)
 
   nilaiDenda Int
@@ -282,6 +264,7 @@ enum Status {
   BOOKED
   PINJAM
   TERLAMBAT
+  MENUNGGU_CEKADMIN
   SELESAI
 }
 
@@ -307,11 +290,4 @@ enum NamaKelas {
   A
   B
   C
-}
-
-////////////////////////////////////////////////
-/// ERD
-////////////////////////////////////////////////
-generator erd {
-  provider = "prisma-erd-generator"
 }

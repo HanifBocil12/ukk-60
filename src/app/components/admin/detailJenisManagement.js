@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 import { HexColorPicker } from "react-colorful";
+import { fetchData } from "@/lib/fetch";
 
 export default function DetailJenis({ onSelectJenisBuku, onViewAll }) {
   const [search, setSearch] = useState("");
@@ -46,9 +47,7 @@ export default function DetailJenis({ onSelectJenisBuku, onViewAll }) {
 
     if (res.ok) {
       setShowModal(false);
-      fetch("/api/jenis-buku")
-        .then((res) => res.json())
-        .then(setJenisBuku);
+      fetchData("/api/jenis-buku",setJenisBuku)
     }
   };
 
@@ -65,10 +64,9 @@ export default function DetailJenis({ onSelectJenisBuku, onViewAll }) {
   }
 
   useEffect(() => {
-    fetch("/api/jenis-buku")
-      .then((res) => res.json())
-      .then(setJenisBuku);
+    fetchData("/api/jenis-buku",setJenisBuku)
   }, []);
+  
   return (
     <>
       <div className="flex-1 flex flex-col min-h-[550px] gap-4">

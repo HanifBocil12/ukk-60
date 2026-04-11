@@ -6,6 +6,8 @@ import UserManagement from "../components/admin/UserManagement";
 import BookManagement from "../components/admin/BookManagement";
 import JenisBooks from "../components/admin/JenisBooksManagement";
 import DetailJenis from "../components/admin/detailJenisManagement";
+import TransactionDetail from "../components/admin/transactionManagement";
+import Analisa from "../components/admin/analisa";
 
 export default function AdminPage(params) {
   const [activePage, setActivePage] = useState("landingjenis");
@@ -66,13 +68,19 @@ export default function AdminPage(params) {
             { activePage === "landingjenis" && "Book Management" }
             { activePage === "detailjenis" && "Jenis Book Management" }
             { activePage === "books" && "Book Management" }
-            { activePage === "trtransactionans" && "Transaction Management" }
+            { activePage === "transaction" && "Transaction Management" }
             { activePage === "analisa" && "Analisa" }
           </h1>
           {/* <UserManagement></UserManagement> */}
           {/* <BookManagement></BookManagement> */}
           {activePage === "user" && (
             <UserManagement></UserManagement>
+          )}
+          {activePage === "transaction" && (
+            <TransactionDetail></TransactionDetail>
+          )}
+          {activePage === "analisa" && (
+            <Analisa></Analisa>
           )}
           {activePage === "landingjenis" && (
             <JenisBooks

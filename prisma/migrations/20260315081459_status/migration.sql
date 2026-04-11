@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "Status" ADD VALUE 'MENUNGGU_CEKADMIN';

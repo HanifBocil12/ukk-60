@@ -18,20 +18,29 @@ export default function LoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: identifier, password }),
-    });
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ identifier, password }),
+      });
 
-    const data = await res.json();
+      const text = await res.text();
+      const data = text ? JSON.parse(text) : {};
 
-    if (res.ok) {
-      if (data.role === "GURU") router.push("/guru/dashboard");
-      if (data.role === "SISWA") router.push("/siswa/dashboard");
-      if (data.role === "ADMIN") router.push("/admin/");
-    } else {
-      alert(data.message);
+      if (!res.ok) {
+        throw new Error(data.message || "Login gagal");
+      }
+
+      if (data.role) {
+        if (data.role === "ADMIN") {
+          router.push("/admin");
+        } else {
+          router.push(`/users/${data.role.toLowerCase()}`);
+        }
+      }
+    } catch (err) {
+      alert(err.message);
     }
   };
 
@@ -39,8 +48,16 @@ export default function LoginPage() {
     <div className="min-h-screen flex">
       {/* LEFT SIDE */}
       <div className="relative hidden md:block md:w-1/2">
-        <Image src="/kanan2.png" alt="Bookshelf" fill className="object-cover" />
-        <Link href="/" className="absolute top-6 left-6 bg-slate-600 text-white p-3 rounded-full hover:bg-slate-700 transition">
+        <Image
+          src="/kanan2.png"
+          alt="Bookshelf"
+          fill
+          className="object-cover"
+        />
+        <Link
+          href="/"
+          className="absolute top-6 left-6 bg-slate-600 text-white p-3 rounded-full hover:bg-slate-700 transition"
+        >
           <ArrowLeft size={20} />
         </Link>
       </div>
@@ -75,7 +92,9 @@ export default function LoginPage() {
                 type="text"
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
-                placeholder={isAdmin ? "Enter your NIP" : "Enter your NISN/email"}
+                placeholder={
+                  isAdmin ? "Enter your NIP" : "Enter your NISN/email"
+                }
                 className="w-full px-4 py-2 border border-black text-black rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500"
               />
             </div>
@@ -95,7 +114,11 @@ export default function LoginPage() {
             </div>
 
             <div className="flex justify-between text-sm text-gray-500">
-              <button type="button" className="hover:underline" onClick={() => setIsAdmin(!isAdmin)}>
+              <button
+                type="button"
+                className="hover:underline"
+                onClick={() => setIsAdmin(!isAdmin)}
+              >
                 {isAdmin ? "Login sebagai User" : "Login sebagai Admin"}
               </button>
               <button type="button" className="hover:underline">
@@ -103,14 +126,20 @@ export default function LoginPage() {
               </button>
             </div>
 
-            <button type="submit" className="w-full bg-slate-600 text-white py-2 rounded-md hover:bg-slate-700 transition">
+            <button
+              type="submit"
+              className="w-full bg-slate-600 text-white py-2 rounded-md hover:bg-slate-700 transition"
+            >
               {isAdmin ? "Sign In as Admin" : "Sign In"}
             </button>
           </form>
         </div>
         <p className="text-sm text-center text-gray-500">
           Don't have an account?
-          <Link href="/register" className="text-blue-600 hover:underline cursor-pointer">
+          <Link
+            href="/register"
+            className="text-blue-600 hover:underline cursor-pointer"
+          >
             Sign Up
           </Link>
         </p>

@@ -1,0 +1,169 @@
+model users{
+  id
+  nama
+  email
+  password
+  image
+  role
+
+  admin
+  guru
+  siswa
+
+  transaksi
+  booking
+  
+  resent
+  recv
+}
+
+model guru{
+  id 
+  nip
+
+  user relation
+  walas
+}
+
+model admin{
+  id
+  nip
+  user relation
+}
+
+model siswa{
+  id
+  nisn
+
+  user relation
+  kelas relation
+}
+
+model clases{
+  id
+  nama kelas
+  tinggkat kelas
+
+  relation walas
+  siswa[]
+}
+
+model walas{
+  id
+  relation guru
+  clases []
+}
+
+model buku{
+  id
+  judul buku
+  pengarang
+  penerbit
+  tahun
+  desc
+  image
+  stok
+
+
+  relation jenisbuku
+
+  booking[]
+  detailtransaksi[]
+} 
+
+model jenisbuku{
+  id
+  nama_judul
+  icon
+  desc
+  warna
+
+  buku[]
+}
+
+model transaksi{
+  id
+  user relation
+  tipe transaksi
+  keterangan
+
+  tanggal dipinjam
+  tanggal kembali
+  status_transaksi
+
+  booking?
+  detailtransaksi[]
+  dendaa?
+}
+
+model detailtransaksi{
+  id
+  relation transaksi
+
+  buku relation
+
+  kondisi buku
+  jumlah buku
+}
+
+model booking{
+  id
+  relation transaksi
+  relation buku
+  relation user
+  durasi
+  status_booking
+  tanggal booking
+}
+
+model aduan{
+  id
+  relation admin("sebagai pengirim")
+  relation walas("sebagai penerima")
+  desc
+  status_aduan
+}
+
+model denda{
+  id
+  relation transaksi
+  jumlah
+  alasan
+}
+
+enum status_transaksi{
+  booked
+  pinjam
+  menunggu_admin
+  selesai
+  terlambat
+}
+
+enum status_booking{
+  menunggu
+  siap diambil
+  batal
+}
+
+aduan {
+  baru di tanggapi selesai
+}
+
+enum tipe{
+  guru
+  siswa
+}
+
+enum role{
+  guru
+  siswa
+  admin
+}
+
+enum tinggkat{
+  x xi xii
+}
+
+enum nama{
+  a b c
+}

@@ -151,7 +151,7 @@ export default function SignUpPage() {
 
                 <select
                   value={form.kelasId}
-                 onChange={(e) => setForm({ ...form, kelasId: e.target.value })}
+                  onChange={(e) => setForm({ ...form, kelasId: e.target.value })}
                   className="w-full px-4 py-2 border border-black text-black rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500"
                 >
                   {isGuru && <option value="">None</option>}

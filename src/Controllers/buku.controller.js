@@ -42,6 +42,11 @@ export async function createBuku(req) {
   return Response.json(buku, { status: 201 });
 }
 
+export async function getTrendingBuku() {
+  const data = await BukuModel.findTrending();
+  return Response.json(data);
+}
+
 export async function updateBuku(req, { params }) {
   const data = await req.json();
   const buku = await BukuModel.update(parseInt(params.id), data);

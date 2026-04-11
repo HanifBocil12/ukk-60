@@ -1,8 +1,10 @@
+// Book maanagement
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
 import { ArrowLeft } from "lucide-react";
+import { fetchData } from "@/lib/fetch";
 
 // fieldConfig dikelompokkan sesuai posisi di layout
 const fieldSingle = [
@@ -51,14 +53,20 @@ export default function BookManagement({ filterJenisId, onSelectJenisBuku }) {
   const [search, setSearch] = useState("");
 
   const [form, setForm] = useState({});
-  useEffect(() => {
-    fetch("/api/schema/Buku")
-      .then((res) => res.json())
-      .then(setForm);
-  }, []);
 
-  const filteredBooks = books.filter((book) =>
-    book.judul.toLowerCase().includes(search.toLowerCase()),
+  const fetchBook = useCallback(() => 
+    fetch("/api/books")
+    .then((r) => r.json())
+    .then((data) => {
+      if (filterJenisId) {
+        setBooks(data.filter((b) => b.jenisBukuId === filterJenisId));
+      } else {
+        setBooks(data);
+      }
+    }), [filterJenisId]); 
+
+    const filteredBooks = books.filter((book) =>
+      book.judul.toLowerCase().includes(search.toLowerCase()),
   );
 
   const handleSubmit = async (e) => {
@@ -75,19 +83,11 @@ export default function BookManagement({ filterJenisId, onSelectJenisBuku }) {
 
     if (res.ok) {
       setShowModal(false);
-      fetch("/api/books")
-        .then((r) => r.json())
-        .then((data) => {
-          if (filterJenisId) {
-            setBooks(data.filter((b) => b.jenisBukuId === filterJenisId));
-          } else {
-            setBooks(data);
-          }
-        });
+      fetchBook()
     }
   };
 
-  const handleDelet = async (id) => {
+  const handleDelete = async (id) => {
     if (!confirm("Yakin mau hapus buku ini ?")) return;
 
     const res = await fetch(`/api/books/${id}`, { method: "DELETE" });
@@ -97,26 +97,18 @@ export default function BookManagement({ filterJenisId, onSelectJenisBuku }) {
   };
 
   useEffect(() => {
-    fetch("/api/jenis-buku")
-      .then((res) => res.json())
-      .then(setJenisBuku);
+    fetchData("/api/jenis-buku",setJenisBuku)
+    fetchData("/api/schema/Buku",setForm)
   }, []);
 
   useEffect(() => {
-    fetch("/api/books")
-      .then((res) => res.json())
-      .then((data) => {
-        if (filterJenisId) {
-          setBooks(data.filter((b) => b.jenisBukuId === filterJenisId));
-        } else {
-          setBooks(data);
-        }
-      });
-  }, [filterJenisId]);
+    fetchBook(); // ← harus dipanggil dengan ()
+  }, [fetchBook]);
 
   return (
     <>
       <main className="flex flex-col flex-1 min-h-[550px] gap-4">
+        {/* Nav */}
         <div className="flex justify-between">
           <div className="flex gap-2">
             <button
@@ -177,7 +169,7 @@ export default function BookManagement({ filterJenisId, onSelectJenisBuku }) {
                     <Icon icon="mdi:pencil-outline" className="w-4 h-4"></Icon> Edit
                   </button>
                   <button
-                    onClick={() => handleDelet(book.id)}
+                    onClick={() => handleDelete(book.id)}
                     className="flex-1 flex bg-red-50 text-red-500 border items-center justify-center gap-1 border-red-200 text-sm py-1 rounded-lg"
                   >
                     <Icon icon="material-symbols:delete-rounded" className="w-4 h-4"></Icon> Hapus

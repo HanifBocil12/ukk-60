@@ -4,13 +4,13 @@ import { Icon } from "@iconify/react";
 import Image from "next/image";
 import { HexColorPicker } from "react-colorful";
 
-export default function JenisBooks({onSelectJenisBuku, onViewAll}) {
+export default function JenisBooks({ onSelectJenisBuku, onViewAll }) {
   const [search, setSearch] = useState("");
   const [jenisBuku, setJenisBuku] = useState([]);
+  const [trending, setTrending] = useState([]);
   const [modal, setShowModal] = useState(false);
   const [form, setForm] = useState({});
   const [colorOpen, setColorOpen] = useState(false);
-
   const [iconOpen, setIconOpen] = useState(false);
   const [iconQuery, setIconQuery] = useState("");
   const [iconList, setIconList] = useState([]);
@@ -43,7 +43,6 @@ export default function JenisBooks({onSelectJenisBuku, onViewAll}) {
       method: "POST",
       body: formData,
     });
-
     if (res.ok) {
       setShowModal(false);
       fetch("api/jenis-buku")
@@ -56,6 +55,9 @@ export default function JenisBooks({onSelectJenisBuku, onViewAll}) {
     fetch("api/jenis-buku")
       .then((res) => res.json())
       .then(setJenisBuku);
+    fetch("/api/books/trending")
+      .then((res) => res.json())
+      .then(setTrending);
   }, []);
 
   return (
@@ -86,19 +88,37 @@ export default function JenisBooks({onSelectJenisBuku, onViewAll}) {
               </span>
             </div>
           </div>
-          <span onClick={() => onViewAll()} className="flex items-center text-birumuda gap-2 font-semibold text-normal-desc">
+          <span
+            onClick={() => onViewAll()}
+            className="flex items-center text-birumuda gap-2 font-semibold text-normal-desc cursor-pointer"
+          >
             View all
-            <Image src="arrow_forward.svg" width={16} height={16} alt="arrow"></Image>
+            <Image
+              src="arrow_forward.svg"
+              width={16}
+              height={16}
+              alt="arrow"
+            ></Image>
           </span>
         </div>
 
         <div className="grid grid-cols-3 gap-4">
           {filterJenisBuku.slice(0, 6).map((jenis) => (
-            <div key={jenis.id}
-            onClick={() => onSelectJenisBuku(jenis.id)} className="card text-black overflow-hidden">
+            <div
+              key={jenis.id}
+              onClick={() => onSelectJenisBuku(jenis.id)}
+              className="card text-black overflow-hidden cursor-pointer"
+            >
               <div className="flex items-center text-title-desc gap-2">
-                <div className="flex items-center justify-center rounded-sm h-6 w-6 "  style={{ background: `${jenis.color}40` }}>
-                  <Icon icon={jenis.icon} className="text-red-500  w-5 h-5" style={{color: `${jenis.color}`}}/>
+                <div
+                  className="flex items-center justify-center rounded-sm h-6 w-6"
+                  style={{ background: `${jenis.color}40` }}
+                >
+                  <Icon
+                    icon={jenis.icon}
+                    className="w-5 h-5"
+                    style={{ color: `${jenis.color}` }}
+                  />
                 </div>
                 {jenis.nama}
               </div>
@@ -107,6 +127,7 @@ export default function JenisBooks({onSelectJenisBuku, onViewAll}) {
           ))}
         </div>
 
+        {/* Trending Now */}
         <div className="flex text-black text-title-desc items-center gap-2">
           Trending Now
           <Image src="/fire.svg" width={20} height={20} alt="fire" />
@@ -115,10 +136,41 @@ export default function JenisBooks({onSelectJenisBuku, onViewAll}) {
           </span>
         </div>
 
+        <div className="grid grid-cols-4 gap-4">
+          {trending.map((book) => (
+            <div
+              key={book.id}
+              className="bg-white rounded-xl shadow-sm overflow-hidden"
+            >
+              <div className="relative">
+                <img
+                  src={book.image_buku}
+                  alt={book.judul}
+                  className="w-full h-40 object-cover"
+                />
+              </div>
+              <div className="p-3">
+                <p className="text-title-desc text-black mb-1">{book.judul}</p>
+                <p className="text-xs text-gray-500">
+                  Penulis : {book.pengarang}
+                </p>
+                <p className="text-xs text-gray-500">
+                  Kategori : {book.jenisBuku?.nama}
+                </p>
+                <p className="text-xs text-gray-500">
+                  Penerbit : {book.penerbit}
+                </p>
+                <p className="text-xs text-gray-500">
+                  Tahun terbit : {book.tahun}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
         {modal && (
           <div className="fixed inset-0 bg-black/50 text-black flex items-center justify-center z-50">
             <div className="card-f w-[450px]">
-              {/* Header */}
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-sm text-title-desc">Add Category</h2>
                 <button
@@ -128,9 +180,8 @@ export default function JenisBooks({onSelectJenisBuku, onViewAll}) {
                   ✕
                 </button>
               </div>
-              {/* form */}
               <form onSubmit={handleSubmit} className="space-y-3">
-                <div className="">
+                <div>
                   <label className="text-normal-desc text-grey-600 mb-1 block">
                     Nama
                   </label>
@@ -159,7 +210,6 @@ export default function JenisBooks({onSelectJenisBuku, onViewAll}) {
                     )}
                   </button>
                 </div>
-                {/* Modal icon */}
                 {iconOpen && (
                   <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
                     <div className="bg-white rounded-xl w-[500px] max-h-[80vh] flex flex-col shadow-2xl overflow-hidden">
@@ -204,13 +254,10 @@ export default function JenisBooks({onSelectJenisBuku, onViewAll}) {
                     </div>
                   </div>
                 )}
-                {/* Color */}
                 <div>
                   <label className="text-xs text-gray-600 mb-1 block">
                     Warna
                   </label>
-
-                  {/* Trigger */}
                   <button
                     type="button"
                     onClick={() => setColorOpen(!colorOpen)}
@@ -224,8 +271,6 @@ export default function JenisBooks({onSelectJenisBuku, onViewAll}) {
                       {form.color || "#f59e0b"}
                     </span>
                   </button>
-
-                  {/* Color picker */}
                   {colorOpen && (
                     <div className="mt-2">
                       <HexColorPicker
@@ -235,8 +280,7 @@ export default function JenisBooks({onSelectJenisBuku, onViewAll}) {
                     </div>
                   )}
                 </div>
-                {/* desc */}
-                <div className="">
+                <div>
                   <label className="text-xs text-gray-600 mb-1 block">
                     Deskripsi
                   </label>
@@ -249,7 +293,6 @@ export default function JenisBooks({onSelectJenisBuku, onViewAll}) {
                     rows={3}
                   />
                 </div>
-                {/* Footer */}
                 <div className="flex justify-end gap-2 mt-5">
                   <button
                     type="button"

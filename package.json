@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/bcrypt": "^6.0.0",
     "autoprefix": "^1.0.1",
     "autoprefixer": "^10.4.24",
     "eslint": "^9",

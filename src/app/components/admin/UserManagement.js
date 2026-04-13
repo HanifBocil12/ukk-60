@@ -6,8 +6,11 @@ import { fetchData } from "@/lib/fetch";
 export default function UserManagement() {
   const [showModal, setShowModal] = useState(false);
   const [showModalFilter, setShowModalFilter] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editUser, setEditUser] = useState(null);
   const [isGuru, setIsGuru] = useState(false);
   const [form, setForm] = useState({});
+  const [editForm, setEditForm] = useState({});
   const [roles, setRole] = useState([]);
   const [guru, setGuru] = useState([]);
   const [siswa, setSiswa] = useState([]);
@@ -51,6 +54,43 @@ export default function UserManagement() {
       } else {
         fetchData("/api/siswa",setSiswa)
       }
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!confirm("Yakin mau hapus user ini?")) return;
+    const endpoint = isGuru ? `/api/guru/${id}` : `/api/siswa/${id}`;
+    const res = await fetch(endpoint, { method: "DELETE" });
+    if (res.ok) {
+      isGuru ? fetchData("/api/guru", setGuru) : fetchData("/api/siswa", setSiswa);
+    }
+  };
+
+  const handleEdit = (user) => {
+    setEditUser(user);
+    setEditForm({
+      nama: user.nama,
+      email: user.email,
+      nip: user.guru?.nip || "",
+      nisn: user.siswa?.nisn || "",
+      kelasId: isGuru
+        ? user.guru?.walas?.kelas?.[0]?.id || ""
+        : user.siswa?.classId || "",
+    });
+    setShowEditModal(true);
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    const endpoint = isGuru ? `/api/guru/${editUser.id}` : `/api/siswa/${editUser.id}`;
+    const res = await fetch(endpoint, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(editForm),
+    });
+    if (res.ok) {
+      setShowEditModal(false);
+      isGuru ? fetchData("/api/guru", setGuru) : fetchData("/api/siswa", setSiswa);
     }
   };
 
@@ -176,7 +216,24 @@ export default function UserManagement() {
                     : `${user.siswa?.class?.tingkat ?? "-"} ${user.siswa?.class?.namaKelas ?? ""}`}
                 </td>
                 <td>Tanya</td>
-                <td className="text-gray-400">✏</td>
+                <td className="py-3">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleEdit(user)}
+                      className="text-blue-400 hover:text-blue-600"
+                      title="Edit"
+                    >
+                      <Icon icon="material-symbols:edit" className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(user.id)}
+                      className="text-red-400 hover:text-red-600"
+                      title="Hapus"
+                    >
+                      <Icon icon="material-symbols:delete" className="w-4 h-4" />
+                    </button>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -306,6 +363,92 @@ export default function UserManagement() {
                 <div className="flex justify-end gap-1">
                   <button
                     onClick={() => setShowModal(false)}
+                    className="px-4 py-2 text-xs border text-black rounded-md"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-birutua text-white px-4 text-xs rounded-md py-2"
+                  >
+                    Simpan
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {showEditModal && (
+          <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+            <div className="card w-[450px] bg-white">
+              <div className="text-black flex justify-between">
+                <div className="">Edit User</div>
+                <button onClick={() => setShowEditModal(false)} className="">
+                  X
+                </button>
+              </div>
+              <form onSubmit={handleUpdate} className="space-y-3 text-black">
+                <div className="">
+                  <label className="text-normal-desc text-grey-600 mb-1 block">
+                    Nama
+                  </label>
+                  <input
+                    value={editForm.nama || ""}
+                    onChange={(e) => setEditForm({ ...editForm, nama: e.target.value })}
+                    className="w-full border border-gray-300 rouded-card px-3 py-1.5 text-normal-desc"
+                  />
+                </div>
+                <div className="">
+                  <label className="text-normal-desc text-grey-600 mb-1 block">
+                    {isGuru ? "NIP" : "NISN"}
+                  </label>
+                  <input
+                    value={isGuru ? editForm.nip || "" : editForm.nisn || ""}
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+                        [isGuru ? "nip" : "nisn"]: e.target.value,
+                      })
+                    }
+                    className="w-full border border-gray-300 rouded-card px-3 py-1.5 text-normal-desc"
+                  />
+                </div>
+                <div className="">
+                  <label className="text-normasl-desc text-gray-600 mb-1 block">
+                    {isGuru ? "Walas" : "Class"}
+                  </label>
+                  <select
+                    value={editForm.kelasId || ""}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, kelasId: e.target.value })
+                    }
+                    className="w-full border text-gray-600 border-gray-300 rounded-md px-3 py-1.5 text-xs"
+                  >
+                    <option value="">Pilih Kelas</option>
+                    {classes.map((cls) => (
+                      <option key={cls.id} value={cls.id}>
+                        {cls.tingkat} {cls.namaKelas}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="">
+                  <label className="text-normal-desc text-grey-600 mb-1 block">
+                    Email
+                  </label>
+                  <input
+                    value={editForm.email || ""}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, email: e.target.value })
+                    }
+                    className="w-full border border-gray-300 rouded-card px-3 py-1.5 text-normal-desc"
+                  />
+                </div>
+                <div className="flex justify-end gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setShowEditModal(false)}
                     className="px-4 py-2 text-xs border text-black rounded-md"
                   >
                     Batal

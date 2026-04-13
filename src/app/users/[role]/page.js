@@ -28,6 +28,11 @@ export default function UserDashboard() {
     { icon: "ri:bank-card-2-line", label: "Denda" },
   ];
 
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/login";
+  };
+
   return (
     <div
       className="flex h-screen bg-gray-50 overflow-hidden"
@@ -85,11 +90,9 @@ export default function UserDashboard() {
         </nav>
 
         {/* Logout */}
-        <div className="px-3 pb-4">
-          <button className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs text-red-400 hover:bg-red-50 transition-colors">
-            <span>↩</span> Keluar
-          </button>
-        </div>
+        <button onClick={handleLogout} className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs text-red-400 hover:bg-red-50 transition-colors">
+          <span>↩</span> Keluar
+        </button>
       </aside>
 
       {/* Floating reopen button */}

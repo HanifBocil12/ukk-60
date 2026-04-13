@@ -14,8 +14,14 @@ export const SiswaModel = {
                   nisn,
                   userId: user.id,
                   // Kalau ada kelas dipilih, langsung nested create Walas
-                  ...(kelasId && { classId: parseInt(kelasId) })
                 };
+
+                let classId
+
+                if(kelasId){
+                  classId = parseInt(kelasId)
+                  data.classId = classId
+                }
             
                 return data;
               },

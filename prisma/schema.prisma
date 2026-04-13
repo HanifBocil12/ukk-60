@@ -159,7 +159,6 @@ model Transaksi {
   user   Users @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   tipe       TransaksiTipe
-  keterangan String?
 
   tanggalPinjam  DateTime
   tanggalKembali DateTime?

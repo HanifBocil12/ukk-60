@@ -1,169 +1,166 @@
 model users{
-  id
-  nama
-  email
-  password
-  image
-  role
-
-  admin
-  guru
-  siswa
-
-  transaksi
-  booking
+  id int @default(autoincrement())
+  nama string
+  email string
+  password string
+  image_profile string
+  role Role
   
-  resent
-  recv
-}
+  siswa Siswa?
+  guru Guru?
+  admin Admin?
 
-model guru{
-  id 
-  nip
+  transaksi Transaksi[]
+  boking Boking[]
 
-  user relation
-  walas
-}
-
-model admin{
-  id
-  nip
-  user relation
+  resent Aduan[] @relation("admin_pengirim")
+  recv Aduan[] @relation("walas penerima")
 }
 
 model siswa{
   id
-  nisn
+  nisn string
 
-  user relation
-  kelas relation
+  user users @relation()
+  kelas clases @relation()
 }
 
-model clases{
+model guru{
   id
-  nama kelas
-  tinggkat kelas
+  nip string
 
-  relation walas
-  siswa[]
+  users users @relation()
+
+  walas walas?
+}
+
+model admin{
+  id
+  nip string
+
+  userid int
+  users users @relation()
 }
 
 model walas{
-  id
-  relation guru
-  clases []
+  id 
+  guruid Int
+  guru guru @relation()
+
+  kelas clases[]
 }
 
+model clases {
+  id
+  tinggkat tinggkat
+  nama_kelas nama_kelas
+
+  walasid int
+  walas walas @relation()
+
+  siswa siswa[]
+}
+// book
 model buku{
   id
-  judul buku
-  pengarang
-  penerbit
-  tahun
-  desc
-  image
-  stok
+  judul_buku string
+  pengarang string
+  penerbit string
+  stok int
+  desc string
+  image string
+  tahun int
 
+  jenisbukuId
+  jenisbuku jenisbuku @relation
 
-  relation jenisbuku
-
-  booking[]
-  detailtransaksi[]
-} 
+  detailtransaksi detailtransaksi[]
+  boking boking[]
+}
 
 model jenisbuku{
   id
-  nama_judul
-  icon
-  desc
-  warna
+  nama string
+  icon string
+  warna string
+  desc string
 
   buku[]
 }
 
-model transaksi{
-  id
-  user relation
-  tipe transaksi
-  keterangan
+// transaksi--
+model Transaksi{
+  id 
+  tipe Tipe
+  tanggal_terima DateTime
+  tanggal_kembali DateTime
+  status_transaksi status
 
-  tanggal dipinjam
-  tanggal kembali
-  status_transaksi
+  userid
+  user user @relation()
 
-  booking?
-  detailtransaksi[]
-  dendaa?
+  detailtransaksi detailtransaksi[]
+  boking boking?
+  denda denda?
 }
 
 model detailtransaksi{
   id
-  relation transaksi
+  transaksi Transaksi @relation()
+  buku buuku @relation()
 
-  buku relation
-
-  kondisi buku
-  jumlah buku
+  kondisi_buku String
+  jumlah Int
 }
 
-model booking{
+model Aduan{
   id
-  relation transaksi
-  relation buku
-  relation user
-  durasi
-  status_booking
-  tanggal booking
-}
 
-model aduan{
-  id
-  relation admin("sebagai pengirim")
-  relation walas("sebagai penerima")
-  desc
-  status_aduan
+  resent users? @relation("admin_pengirim", )
+  recv users? @relation("walas_penerima", )
+
+  desc string
+  status status_aduan
 }
 
 model denda{
   id
-  relation transaksi
-  jumlah
-  alasan
+  transaksiid
+  transaksi transaksi @relation()
+
+  alasan string
+  nilaidenda int
 }
 
+//enum
+enum role{
+  siswa guru admin
+}
+enum tie{
+  guru siswa
+}
 enum status_transaksi{
   booked
+  selesai
   pinjam
   menunggu_admin
-  selesai
   terlambat
 }
-
+enum status_aduan{
+  baru
+  ditanggapi
+  selesai
+}
 enum status_booking{
+  siapdiambil
   menunggu
-  siap diambil
   batal
-}
-
-aduan {
-  baru di tanggapi selesai
-}
-
-enum tipe{
-  guru
-  siswa
-}
-
-enum role{
-  guru
-  siswa
-  admin
 }
 
 enum tinggkat{
   x xi xii
 }
 
-enum nama{
+enum nama_kelas{
   a b c
 }

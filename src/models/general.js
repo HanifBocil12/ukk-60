@@ -20,20 +20,10 @@ export const General = (model, hooks = {}) => ({
     return model.create({ data });
   },
   update: async (id, data) => {
-    if (hooks.beforeCreate) data = await hooks.beforeCreate(data);
+    if (hooks.beforeUpdate) data = await hooks.beforeUpdate(data);
     return model.update({ where: { id }, data });
   },
   delete: async (id) => model.delete({ 
     where: { id } 
   }),
 });
-
-// // ========================
-// // Contoh penggunaan
-// // ========================
-// const userService = General(prisma.user); // <-- VSCode akan kasih suggestion: prisma.user, prisma.buku, prisma.post
-// const bukuService = General(prisma.buku);
-
-// // Panggil helper
-// await userService.findAll();
-// await bukuService.create({ title: "Judul Buku" });

@@ -1,4 +1,4 @@
-import { getMyTransaksi } from "@/Controllers/transaksi.contoller";
+import { getMyTransaksi } from "@/controller/transaksi.controller";
 
 export async function GET(req) {
   return getMyTransaksi(req);

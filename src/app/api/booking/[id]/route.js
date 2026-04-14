@@ -1,4 +1,4 @@
-import { konfirmasiBooking, batalBooking } from "@/Controllers/booking.controller";
+import { konfirmasiBooking, batalBooking } from "@/Controller/booking.controller";
 
 export async function PUT(req, { params }) {
   const { id } = await params;

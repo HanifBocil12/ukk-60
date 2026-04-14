@@ -354,8 +354,8 @@ export default function UserManagement() {
                     className="hover:underline"
                   >
                     {isGuru
-                      ? "Register sebagai Siswa"
-                      : "Register sebagai Guru"}
+                      ? "Add Siswa"
+                      : "Add Guru"}
                   </button>
                 </div>
 

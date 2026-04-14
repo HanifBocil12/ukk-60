@@ -1,5 +1,5 @@
 // /api/guru/route.js
-import { getGuru } from "@/Controllers/users.controller";
+import { getGuru } from "@/controller/users.controller";
 
 export async function GET() {
     return getGuru()

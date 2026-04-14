@@ -1,4 +1,4 @@
-import { getBuku,createBuku } from "@/Controllers/buku.controller";
+import { getBuku,createBuku } from "@/controller/buku.contoller";
 
 export async function GET(req) {
     return getBuku(req)

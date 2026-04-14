@@ -1,4 +1,4 @@
-import { registerSiswa,getSiswa } from "../../../../../Controllers/Auth/auth.controller";
+import { registerSiswa,getSiswa } from "@/controller/Auth/auth.controller"
 
 export async function GET(req) {
     return getSiswa(req)

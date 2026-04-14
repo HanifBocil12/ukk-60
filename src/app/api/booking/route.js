@@ -1,4 +1,4 @@
-import { getAllBooking, createBooking } from "@/Controllers/booking.controller";
+import { getAllBooking, createBooking } from "@/Controller/booking.controller";
 
 export async function GET() {
   return getAllBooking();

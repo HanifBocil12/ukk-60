@@ -7,6 +7,7 @@ import { defineConfig, env } from "prisma/config";
 export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
+    // seed: 'node prisma/seed.js', // pakai ini kalau Next.js
     path: "prisma/migrations",
   },
   engine: "classic",

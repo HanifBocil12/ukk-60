@@ -7,9 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-////////////////////////////////////////////////
-/// USER (AUTH / ROLE)
-////////////////////////////////////////////////
 model Users {
   id            Int     @id @default(autoincrement())
   nama          String
@@ -32,9 +29,6 @@ model Users {
   aduanRecv Aduan[] @relation("WalasPenerima")
 }
 
-////////////////////////////////////////////////
-/// ADMIN
-////////////////////////////////////////////////
 model Admin {
   id  Int    @id @default(autoincrement())
   nip String @unique
@@ -46,9 +40,6 @@ model Admin {
   user   Users @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-////////////////////////////////////////////////
-/// GURU (PROFESI)
-////////////////////////////////////////////////
 model Guru {
   id  Int    @id @default(autoincrement())
   nip String @unique
@@ -62,9 +53,6 @@ model Guru {
   walas Walas?
 }
 
-////////////////////////////////////////////////
-/// SISWA
-////////////////////////////////////////////////
 model Siswa {
   id   Int    @id @default(autoincrement())
   nisn String @unique
@@ -79,9 +67,6 @@ model Siswa {
   class   Classes? @relation(fields: [classId], references: [id])
 }
 
-////////////////////////////////////////////////
-/// WALAS (JABATAN)
-////////////////////////////////////////////////
 model Walas {
   id Int @id @default(autoincrement())
 
@@ -94,9 +79,6 @@ model Walas {
   updatedAt DateTime @updatedAt
 }
 
-////////////////////////////////////////////////
-/// AKADEMIK (KELAS)
-////////////////////////////////////////////////
 model Classes {
   id        Int       @id @default(autoincrement())
   tingkat   Tingkat
@@ -113,9 +95,6 @@ model Classes {
   @@unique([tingkat, namaKelas])
 }
 
-////////////////////////////////////////////////
-/// PERPUSTAKAAN - MASTER
-////////////////////////////////////////////////
 model JenisBuku {
   id        Int     @id @default(autoincrement())
   nama      String
@@ -149,9 +128,6 @@ model Buku {
   booking     Booking[]
 }
 
-////////////////////////////////////////////////
-/// PERPUSTAKAAN - TRANSAKSI
-////////////////////////////////////////////////
 model Transaksi {
   id Int @id @default(autoincrement())
 
@@ -188,9 +164,6 @@ model DetailTransaksi {
   updatedAt DateTime @updatedAt
 }
 
-////////////////////////////////////////////////
-/// BOOKING
-////////////////////////////////////////////////
 model Booking {
   id Int @id @default(autoincrement())
 
@@ -211,9 +184,6 @@ model Booking {
   updatedAt DateTime @updatedAt
 }
 
-////////////////////////////////////////////////
-/// ADUAN
-////////////////////////////////////////////////
 model Aduan {
   id Int @id @default(autoincrement())
 
@@ -230,9 +200,6 @@ model Aduan {
   updatedAt DateTime @updatedAt
 }
 
-////////////////////////////////////////////////
-/// DENDA
-////////////////////////////////////////////////
 model Denda {
   id Int @id @default(autoincrement())
 
@@ -245,9 +212,7 @@ model Denda {
   createdAt DateTime @default(now())
 }
 
-////////////////////////////////////////////////
-/// ENUMS
-////////////////////////////////////////////////
+// enum
 enum Role {
   ADMIN
   GURU

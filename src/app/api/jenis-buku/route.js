@@ -1,4 +1,4 @@
-import { getJenisBuku,createJenisBuku } from "@/Controllers/jenisbuku.conteoller"
+import { getJenisBuku,createJenisBuku } from "@/controller/jenisbuku.controller"
 
 export async function GET(req) {
     const JenisBuku = getJenisBuku()

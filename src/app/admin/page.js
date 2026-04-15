@@ -12,6 +12,11 @@ import Analisa from "../components/admin/analisa";
 export default function AdminPage(params) {
   const [activePage, setActivePage] = useState("landingjenis");
   const [filterJenisId, setFilterJenisId] = useState(null);
+
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", { method: "POST" });
+    window.location.href = "/login";
+  };
   
   return (
     <>
@@ -56,9 +61,9 @@ export default function AdminPage(params) {
                 {item.name}
               </button>
             ))}
-            <Link href="/" className="text-center block w-full bg-[#e3e7f2] px-4 py-2 rounded-full text-gray-600 hover:bg-[#d4d9ec] transition">
+            <button onClick={handleLogout} className="text-center block w-full bg-[#e3e7f2] px-4 py-2 rounded-full text-gray-600 hover:bg-[#d4d9ec] transition">
               Logout
-            </Link>
+            </button>
           </div>
         </aside>
 

@@ -21,14 +21,23 @@ export const bukuModel = ({
         }
     ),
 
-    findAll: async (params) => {
+    findAll: async () => {
         return prisma.buku.findMany({include:{
             jenisBuku:true
         }})
     },
 
-    findTrending: async (limit = 4) => {
+    findByPenerbit: async (penerbit) => {
         prisma.buku.findMany({
+            where:{penerbit:penerbit},
+            include:{
+                jenisBuku:true
+            }
+        })
+    },
+
+    findTrending: async (limit = 4) => {
+        return prisma.buku.findMany({
             take:limit,
             orderBy:{
                 detailTrans:{

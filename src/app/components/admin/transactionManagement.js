@@ -233,8 +233,8 @@ export default function TransactionDetail() {
               Filter ▼
             </button>
             {showModalFilter && (
-              <div className="absolute top-10 left-0 bg-white border border-gray-200 rounded-md shadow-md p-3 z-50 w-48 space-y-2">
-                <div className="text-black flex justify-end">
+              <div className="absolute text-gray-600 top-10 left-0 bg-white border border-gray-200 rounded-md shadow-md p-3 z-50 w-48 space-y-2">
+                <div className="flex justify-end">
                   <button onClick={() => setShowModalFilter(false)}>X</button>
                 </div>
                 {FILTER_OPTIONS.map((f) => (

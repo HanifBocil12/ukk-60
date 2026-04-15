@@ -4,7 +4,7 @@ import path from "path";
 
 export async function getBuku(req) {
   const buku = await bukuModel.findAll();
-  return Response.json(bku);
+  return Response.json(buku);
 }
 
 export async function createBuku(req) {

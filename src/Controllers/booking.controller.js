@@ -1,4 +1,4 @@
-import { bookingModel } from "@/model/booking.model";
+import { bookingModel } from "@/models/booking.model";
 import jwt from "jsonwebtoken";
 
 function getUserFromReq(req) {

@@ -1,4 +1,4 @@
-import { transaksiModel } from "@/model/transaksi.model";
+import { transaksiModel } from "@/models/transaksi";
 import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
 

@@ -1,10 +1,11 @@
-import { bukuModel } from "@/model/buku.model";
+import { BukuModel } from "@/models/buku.model";
+// import { getSchema } from "@/lib/schema";
 import { writeFile } from "fs/promises";
 import path from "path";
 
 export async function getBuku(req) {
-  const buku = await bukuModel.findAll();
-  return Response.json(buku);
+  const bku = await BukuModel.findAll();
+  return Response.json(bku);
 }
 
 export async function createBuku(req) {
@@ -31,29 +32,29 @@ export async function createBuku(req) {
   data.tahun = parseInt(data.tahun);
   data.stok  = parseInt(data.stok);
   const jenisBukuId = parseInt(data.jenisBukuId);
-  delete data.jenisBukuId; 
+  delete data.jenisBukuId; // ← hapus, ganti pakai connect
 
-  const buku = await bukuModel.create({
+  const buku = await BukuModel.create({
     ...data,
-    jenisBuku: { connect: { id: jenisBukuId } } 
+    jenisBuku: { connect: { id: jenisBukuId } } // ← ini yang Prisma minta
   });
 
   return Response.json(buku, { status: 201 });
 }
 
 export async function getTrendingBuku() {
-  const data = await bukuModel.findTrending();
+  const data = await BukuModel.findTrending();
   return Response.json(data);
 }
 
 export async function updateBuku(req, { params }) {
   const data = await req.json();
-  const buku = await bukuModel.update(parseInt(params.id), data);
+  const buku = await BukuModel.update(parseInt(params.id), data);
   return Response.json(buku);
 }
 
 export async function deleteBuku(req, ctx) {
     const {id} = await ctx.params
-  const buku = await bukuModel.delete(parseInt(id));
+  const buku = await BukuModel.delete(parseInt(id));
   return Response.json({ message: "berhasil dihapus" });
 }

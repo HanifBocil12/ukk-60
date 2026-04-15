@@ -1,4 +1,4 @@
-import { getAllTransaksiAdmin } from "@/Controller/transaksi.controller";
+import { getAllTransaksiAdmin } from "@/Controllers/transaksi.contoller";
 
 export async function GET() {
   return getAllTransaksiAdmin();

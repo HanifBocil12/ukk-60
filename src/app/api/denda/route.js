@@ -1,4 +1,4 @@
-import { getAllDenda } from "@/Controller/denda.controller";
+import { getAllDenda } from "@/Controllers/denda.controller";
 
 export async function GET() {
   return getAllDenda();

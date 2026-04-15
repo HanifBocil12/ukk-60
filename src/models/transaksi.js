@@ -1,9 +1,9 @@
 import { PrismaClient } from "@prisma/client";
-import { general } from "./general";
+import { General } from "./general";
 const prisma = new PrismaClient();
 
 export const transaksiModel = {
-  ...general(prisma.transaksi),
+  ...General(prisma.transaksi),
 
   findAll: async () =>
     prisma.transaksi.findMany({

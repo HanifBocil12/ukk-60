@@ -133,6 +133,7 @@ model Transaksi {
 
   userId Int
   user   Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+  keterangan String?
 
   tipe       TransaksiTipe
 

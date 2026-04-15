@@ -1,4 +1,4 @@
-import { getAllBookingAdmin } from "@/Controller/booking.controller";
+import { getAllBookingAdmin } from "@/Controllers/booking.controller";
 
 export async function GET() {
   return getAllBookingAdmin();

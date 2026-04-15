@@ -1,166 +1,81 @@
 model users{
-  id int @default(autoincrement())
-  nama string
-  email string
-  password string
-  image_profile string
+  id @id @default(autoincrement())
+  nama String
+  email String @unique
+  password String
+  image String
   role Role
-  
+
   siswa Siswa?
   guru Guru?
   admin Admin?
 
+
+  booking Boking[]
   transaksi Transaksi[]
-  boking Boking[]
 
-  resent Aduan[] @relation("admin_pengirim")
-  recv Aduan[] @relation("walas penerima")
-}
-
-model siswa{
-  id
-  nisn string
-
-  user users @relation()
-  kelas clases @relation()
-}
-
-model guru{
-  id
-  nip string
-
-  users users @relation()
-
-  walas walas?
+  aduan Aduan ("admin_pengirim")
+  aduan Aduan ("walas_penerima")
 }
 
 model admin{
   id
-  nip string
-
-  userid int
-  users users @relation()
-}
-
-model walas{
-  id 
-  guruid Int
-  guru guru @relation()
-
-  kelas clases[]
-}
-
-model clases {
-  id
-  tinggkat tinggkat
-  nama_kelas nama_kelas
-
-  walasid int
-  walas walas @relation()
-
-  siswa siswa[]
-}
-// book
-model buku{
-  id
-  judul_buku string
-  pengarang string
-  penerbit string
-  stok int
-  desc string
-  image string
-  tahun int
-
-  jenisbukuId
-  jenisbuku jenisbuku @relation
-
-  detailtransaksi detailtransaksi[]
-  boking boking[]
-}
-
-model jenisbuku{
-  id
-  nama string
-  icon string
-  warna string
-  desc string
-
-  buku[]
-}
-
-// transaksi--
-model Transaksi{
-  id 
-  tipe Tipe
-  tanggal_terima DateTime
-  tanggal_kembali DateTime
-  status_transaksi status
+  nip
 
   userid
-  user user @relation()
+  user Users @relation(refe: , field: ,onDelete: )
+}
+
+model guru{
+  id
+  nip
+
+  userid
+  user Users @relation(refe: , field: ,onDelete: )
+
+  walas Walas?
+}
+
+model siswa{
+  id
+  nisn
+
+  userid
+  user Users @relation(refe: , field: ,onDelete: )
+
+  kelasId
+  kelas Kelas @relation(refe: , field: )
+}
+//buku
+model Buku{
+  id
+  nama
+  stok
+  tahun
+  pengarang
+  penerbit
+  desc
+  img
+
+  idKategory Int
+  Kategory Kategory relation(refe: , field: )
 
   detailtransaksi detailtransaksi[]
-  boking boking?
-  denda denda?
+  booking Boking[]
+
+}
+
+model Kategory{
+
+}
+
+// Transaksi
+model Transaksi{
+  id
+
 }
 
 model detailtransaksi{
   id
-  transaksi Transaksi @relation()
-  buku buuku @relation()
 
-  kondisi_buku String
-  jumlah Int
-}
-
-model Aduan{
-  id
-
-  resent users? @relation("admin_pengirim", )
-  recv users? @relation("walas_penerima", )
-
-  desc string
-  status status_aduan
-}
-
-model denda{
-  id
-  transaksiid
-  transaksi transaksi @relation()
-
-  alasan string
-  nilaidenda int
-}
-
-//enum
-enum role{
-  siswa guru admin
-}
-enum tie{
-  guru siswa
-}
-enum status_transaksi{
-  booked
-  selesai
-  pinjam
-  menunggu_admin
-  terlambat
-}
-enum status_aduan{
-  baru
-  ditanggapi
-  selesai
-}
-enum status_booking{
-  siapdiambil
-  menunggu
-  batal
-}
-
-enum tinggkat{
-  x xi xii
-}
-
-enum nama_kelas{
-  a b c
 }

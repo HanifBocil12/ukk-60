@@ -1,8 +1,7 @@
 // app/api/classes/route.js
-import { getKelas } from "@/controller/kelas.controller";
+import { getClasses } from "@/Controllers/classes.controller.js";
 
 
 export async function GET(req) {
-  return getKelas(req);
+  return getClasses(req);
 }
-

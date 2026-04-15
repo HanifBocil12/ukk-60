@@ -1,6 +1,6 @@
 // users.model.js
 import { PrismaClient } from "@prisma/client";
-import { general } from "./general.js";
+import { General } from "./general.js";
 import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
  */
 
 export const UsersModel = {
-  ...general(prisma.users, {
+  ...General(prisma.users, {
     beforeCreate: async (data) => {
       if (data.password) data.password = await bcrypt.hash(data.password, 10);
       return data;
@@ -19,7 +19,8 @@ export const UsersModel = {
   findByEmail: async (email) => {
     return prisma.users.findUnique({ where: { email } });
   },
-  
+
+  // ✅ Service/Model — yang pegang logika DB
   update: async (id, data, isGuru) => {
     const { nama, email, nip, nisn, kelasId } = data;
 

@@ -1,28 +1,28 @@
 // controllers/Auth/auth.controller.js
-import { guruModel } from "@/model/guru.model";
-import { saiswaModel } from "@/model/siswa.model";
-import { UsersModel } from "@/model/users.model";
+import { GuruModel } from "@/models/guru.model";
+import { SiswaModel } from "@/models/siswa.model";
+import { UsersModel } from "@/models/user.model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export async function getGuru(req) {
-  const classes = await guruModel.findAll();
+  const classes = await GuruModel.findAll();
   return Response.json(classes);
 }
 
 export async function getSiswa(req) {
-  const classes = await saiswaModel.findAll();
+  const classes = await SiswaModel.findAll();
   return Response.json(classes);
 }
 
 export async function registerGuru(req) {
   const body = await req.json();
 
-  console.log("body:", body); 
+  console.log("body:", body); // cek dulu apa yang diterima
 
-  const { nama, email, password, nip, kelasId } = body;
+  const { nama, email, password, nip, walasKelasId } = body;
 
-  await guruModel.create({ nama, email, password, nip, kelasId });
+  await GuruModel.create({ nama, email, password, nip, walasKelasId });
 
   return Response.json({ message: "Register berhasil" }, { status: 201 });
 }
@@ -30,19 +30,19 @@ export async function registerGuru(req) {
 export async function registerSiswa(req) {
   const body = await req.json();
 
-  console.log("body:", body); 
+  console.log("body:", body); // cek dulu apa yang diterima
 
   const { nama, email, password, nisn, kelasId } = body;
 
-  await saiswaModel.create({ nama, email, password, nisn, kelasId });
+  await SiswaModel.create({ nama, email, password, nisn, kelasId });
 
   return Response.json({ message: "Register berhasil" }, { status: 201 });
 }
 
 export async function login(req) {
-  const { identifier, password } = await req.json(); 
+  const { identifier, password } = await req.json(); // ← ganti email → identifier
 
-  const user = await UsersModel.findByEmail(identifier);
+  const user = await UsersModel.findByEmail(identifier); // ← ganti email → identifier
   if (!user)
     return Response.json({ message: "Email tidak ditemukan" }, { status: 404 });
 
@@ -64,4 +64,3 @@ export async function login(req) {
 
   return response;
 }
-

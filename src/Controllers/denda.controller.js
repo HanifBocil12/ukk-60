@@ -1,4 +1,4 @@
-import { dendaModel } from "@/model/denda.model";
+import { dendaModel } from "@/models/denda.model";
 import jwt from "jsonwebtoken";
 
 function getUserFromReq(req) {

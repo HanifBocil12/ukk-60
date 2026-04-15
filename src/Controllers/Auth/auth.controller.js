@@ -18,7 +18,7 @@ export async function getSiswa(req) {
 export async function registerGuru(req) {
   const body = await req.json();
 
-  console.log("body:", body); // cek dulu apa yang diterima
+  console.log("body:", body);
 
   const { nama, email, password, nip, walasKelasId } = body;
 
@@ -30,7 +30,7 @@ export async function registerGuru(req) {
 export async function registerSiswa(req) {
   const body = await req.json();
 
-  console.log("body:", body); // cek dulu apa yang diterima
+  console.log("body:", body); 
 
   const { nama, email, password, nisn, kelasId } = body;
 
@@ -40,9 +40,9 @@ export async function registerSiswa(req) {
 }
 
 export async function login(req) {
-  const { identifier, password } = await req.json(); // ← ganti email → identifier
+  const { identifier, password } = await req.json(); 
 
-  const user = await UsersModel.findByEmail(identifier); // ← ganti email → identifier
+  const user = await UsersModel.findByEmail(identifier); 
   if (!user)
     return Response.json({ message: "Email tidak ditemukan" }, { status: 404 });
 

@@ -62,7 +62,7 @@ export async function updateTransaksi(req, id) {
       const kembali = new Date(transaksi.tanggalKembali);
       const hariTerlambat = Math.ceil((now - kembali) / (1000 * 60 * 60 * 24));
 
-      if (hariTerlambat > -2) {
+      if (hariTerlambat > 0) {
         body.status = "TERLAMBAT";
         await transaksiModel.createDenda(
           Number(id),

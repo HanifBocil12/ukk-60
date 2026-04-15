@@ -20,6 +20,16 @@ export const UsersModel = {
     return prisma.users.findUnique({ where: { email } });
   },
 
+  findAllAdmin: async () => {
+    return prisma.users.findMany({
+      where: { role: "ADMIN" },
+      include:{
+        admin:true
+      }
+     }
+    )
+  },
+
   // ✅ Service/Model — yang pegang logika DB
   update: async (id, data, isGuru) => {
     const { nama, email, nip, nisn, kelasId } = data;

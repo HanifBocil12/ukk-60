@@ -3,7 +3,7 @@ import { updateUser, deleteUser } from "@/controllers/users.controller";
 export async function PUT(req, { params }) {
     const { id } = await params;
     const data = await req.json();
-    return updateUser(parseInt(id), data, true); // true = guru
+    return updateUser(parseInt(id), data, true);
 }
 
 export async function DELETE(_, { params }) {

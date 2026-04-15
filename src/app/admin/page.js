@@ -1,22 +1,28 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import UserManagement from "../components/admin/UserManagement";
 import BookManagement from "../components/admin/BookManagement";
 import JenisBooks from "../components/admin/JenisBooksManagement";
 import DetailJenis from "../components/admin/detailJenisManagement";
 import TransactionDetail from "../components/admin/transactionManagement";
 import Analisa from "../components/admin/analisa";
+import { fetchData } from "@/lib/fetch";
 
 export default function AdminPage(params) {
   const [activePage, setActivePage] = useState("landingjenis");
   const [filterJenisId, setFilterJenisId] = useState(null);
+  const [admin, setAdmin] = useState([]);
 
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
     window.location.href = "/login";
   };
+
+  useEffect(() => {
+    fetchData("/api/admin",setAdmin);
+  }, []); 
   
   return (
     <>
@@ -39,7 +45,7 @@ export default function AdminPage(params) {
               alt="profile"
             />
             <div className="text-sm font-semibold text-gray-700">
-              Dwi Annisa
+              {admin[0]?.nama ?? "Admin Name"}
             </div>
             <div className="text-[10px] mt-1 px-3 py-1 bg-green-100 text-green-600 rounded-full">
               Administrator

@@ -82,22 +82,32 @@ export default function UserManagement() {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-    const endpoint = isGuru ? `/api/guru/${editUser.id}` : `/api/siswa/${editUser.id}`;
+
+    const endpoint = editUser.guru
+      ? `/api/guru/${editUser.id}`
+      : `/api/siswa/${editUser.id}`;
+
     const res = await fetch(endpoint, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(editForm),
     });
-    if (res.ok) {
-      setShowEditModal(false);
-      isGuru ? fetchData("/api/guru", setGuru) : fetchData("/api/siswa", setSiswa);
+
+    if (!res.ok) return;
+
+    setShowEditModal(false);
+
+    if (editUser.guru) {
+      fetchData("/api/guru", setGuru);
+    } else {
+      fetchData("/api/siswa", setSiswa);
     }
   };
 
   useEffect(() => {
     fetchData("/api/guru",setGuru);
     fetchData("/api/siswa",setSiswa);
-    fetchData("/api/enums/role",setRole)
+    fetchData("/api/enums/role",(data) => setRole(data.filter((roles) => roles !== "ADMIN")))
     fetchData("/api/classes",setClasses)
   }, []);
 
@@ -284,9 +294,11 @@ export default function UserManagement() {
                       name="role"
                       id=""
                       value={form.role}
-                      onChange={(e) =>
-                        setForm({ ...form, role: e.target.value })
-                      }
+                      onChange={(e) =>{
+                        const val = e.target.value
+                        setForm({ ...form, role: val })
+                        setIsGuru(val === "GURU");
+                      }}
                       className="w-full border text-gray-600 border-gray-300 rounded-md px-3 py-1.5 text-xs"
                     >
                       <option value="">Pilih Jenis</option>
@@ -345,18 +357,6 @@ export default function UserManagement() {
                     }
                     className="w-full border border-gray-300 rouded-card px-3 py-1.5 text-normal-desc"
                   />
-                </div>
-
-                <div className="text-sm text-gray-600 text-center">
-                  <button
-                    type="button"
-                    onClick={() => setIsGuru(!isGuru)}
-                    className="hover:underline"
-                  >
-                    {isGuru
-                      ? "Add Siswa"
-                      : "Add Guru"}
-                  </button>
                 </div>
 
                 {/* footer */}

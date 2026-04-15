@@ -56,11 +56,6 @@ export default function DendaPage() {
                     <p className="text-[11px] text-gray-400">Aktif</p>
                   </div>
                 </div>
-                <div className="flex flex-col items-end gap-1">
-                  <button className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-[12px] font-semibold px-5 py-2.5 rounded-lg transition whitespace-nowrap">
-                    Bayar Sekarang <ArrowRight className="w-4 h-4" />
-                  </button>
-                </div>
               </div>
             </div>
 
@@ -109,9 +104,6 @@ export default function DendaPage() {
                           Rp {d.nilaiDenda?.toLocaleString("id-ID")}
                         </p>
                       </div>
-                      <button className="bg-white text-[#2f3a56] text-[11px] font-bold px-5 py-2.5 rounded-lg hover:bg-slate-100 transition">
-                        Bayar
-                      </button>
                     </div>
                   </div>
                 ))}
